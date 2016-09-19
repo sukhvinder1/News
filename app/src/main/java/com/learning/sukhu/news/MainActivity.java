@@ -1,11 +1,11 @@
 package com.learning.sukhu.news;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private Button selectChannels;
@@ -33,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
     // on click for select channel button
     public void selectChannels(View v){
-        Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show();
+        Intent selectChannelsIntent = new Intent(this, SelectChannelsActivity.class);
+        startActivity(selectChannelsIntent);
     }
 
     /**
