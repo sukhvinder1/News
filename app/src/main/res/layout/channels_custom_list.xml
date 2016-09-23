@@ -8,19 +8,25 @@
         android:id="@+id/imageView"
         android:layout_width="100dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
         android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/sourcesList"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="25dp"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp"
+        android:layout_marginLeft="5dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"
         android:text="Sample Text"
+        android:layout_weight="3.3"
         android:textSize="16sp" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:id="@+id/checkBox"
+        android:nestedScrollingEnabled="false"
+        android:onClick="checkButtonClick" />
 </LinearLayout>

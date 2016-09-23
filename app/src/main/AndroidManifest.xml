@@ -15,7 +15,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SelectChannelsActivity"/>
+        <activity
+            android:name=".SelectChannelsActivity"
+            android:label="Select channels "/>
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
