@@ -18,4 +18,6 @@
         <activity android:name=".SelectChannelsActivity"/>
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
 </manifest>
