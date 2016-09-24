@@ -12,18 +12,18 @@ import android.widget.TextView;
 import com.learning.sukhu.news.Dtos.SourcesDto;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by quocnguyen on 03/08/2016.
  */
 public class CustomListAdapter extends ArrayAdapter<SourcesDto> {
 
-    ArrayList<SourcesDto> sources;
+    List<SourcesDto> sources;
     Context context;
     int resource;
 
-    public CustomListAdapter(Context context, int resource, ArrayList<SourcesDto> sources) {
+    public CustomListAdapter(Context context, int resource, List<SourcesDto> sources) {
         super(context, resource, sources);
         this.sources = sources;
         this.context = context;

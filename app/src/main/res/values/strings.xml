@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">News</string>
+    <string name="take_me_to_the_channel_list">Take me to the channel List</string>
 </resources>

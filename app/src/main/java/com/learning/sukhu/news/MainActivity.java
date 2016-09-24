@@ -1,15 +1,30 @@
 package com.learning.sukhu.news;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.learning.sukhu.news.Dtos.ArticlesDto;
+import com.learning.sukhu.news.Json.GetArticlesJsonData;
+import com.learning.sukhu.news.Transportation.ArticleDataBus;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+public class MainActivity extends AppCompatActivity implements ArticleDataBus{
     private Button selectChannels;
     private String LOG_TAG = "Sukh_tag_MainActivity";
+    private Set<String> userPref;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,15 +34,20 @@ public class MainActivity extends AppCompatActivity {
 
     protected void onStart(){
         super.onStart();
-        logIt("INSIDE ON START");
-
         selectChannels = (Button) findViewById(R.id.selectChannelButton);
+        List<String> list = new ArrayList<>();
+        listView = (ListView) findViewById(R.id.articlesTitlesListView);
 
-        // if user preference is saved, hiding select button channel
-        // TODO if statement logic still pending
-        if(false){
+        getUserPref();
+        if(userPref!=null){
             logIt("Hiding Select Button channels Panel");
             hideSelectChannelsPanel();
+            list.addAll(userPref);
+
+            GetArticlesJsonData getArticlesJsonData = new GetArticlesJsonData(list, this);
+            getArticlesJsonData.execute();
+        }else{
+            listView.setVisibility(View.GONE);
         }
     }
 
@@ -54,5 +74,20 @@ public class MainActivity extends AppCompatActivity {
         if(selectChannelsPanel.getVisibility() == View.VISIBLE){
             selectChannelsPanel.setVisibility(View.GONE);
         }
+    }
+
+    private void getUserPref(){
+        SharedPreferences sharedPref = getSharedPreferences(AppConstants.USER_PREF_FILE, Context.MODE_PRIVATE);
+        userPref = sharedPref.getStringSet(AppConstants.USER_PREF, null);
+    }
+
+    @Override
+    public void processedData(List<ArticlesDto> articlesDtoList) {
+        List<String> titlesList = new ArrayList<>();
+        for(ArticlesDto articlesDto : articlesDtoList){
+            titlesList.add(articlesDto.getTitle());
+        }
+        ArrayAdapter<String> myarrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titlesList);
+        listView.setAdapter(myarrayAdapter);
     }
 }
