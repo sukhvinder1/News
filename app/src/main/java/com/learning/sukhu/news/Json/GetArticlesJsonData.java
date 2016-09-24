@@ -27,7 +27,7 @@ public class GetArticlesJsonData extends GetRawJsonData{
         Log.v(LOG_TAG, "Creating object");
         articlesDto = new ArrayList<>();
         this.dataBus = dataBus;
-        createAndUpdateUri(sourceId);
+        //createAndUpdateUri(sourceIdList);
     }
 
     public boolean createAndUpdateUri(String sourceId){
