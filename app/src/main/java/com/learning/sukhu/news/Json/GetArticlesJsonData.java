@@ -22,15 +22,15 @@ public class GetArticlesJsonData extends GetRawJsonData{
     private List<ArticlesDto> articlesDto;
     private ArticleDataBus dataBus;
 
-    public GetArticlesJsonData(List<String> sourceIdList, ArticleDataBus dataBus) {
+    public GetArticlesJsonData(String sourceId, ArticleDataBus dataBus) {
         super(null);
         Log.v(LOG_TAG, "Creating object");
         articlesDto = new ArrayList<>();
         this.dataBus = dataBus;
-        //createAndUpdateUri(sourceIdList);
+        createAndUpdateUri(sourceId);
     }
 
-    public boolean createAndUpdateUri(String sourceId){
+    private boolean createAndUpdateUri(String sourceId){
         final String API_BASE_URL="https://newsapi.org/v1/articles";
         final String SOURCE_ID="source";
         final String SORT_BY="sortBy";

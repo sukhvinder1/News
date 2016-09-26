@@ -1,8 +1,6 @@
 package com.learning.sukhu.news;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,7 +8,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.learning.sukhu.news.Dtos.ArticlesDto;
 import com.learning.sukhu.news.Json.GetArticlesJsonData;
@@ -25,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus{
     private String LOG_TAG = "Sukh_tag_MainActivity";
     private Set<String> userPref;
     private ListView listView;
+    List<String> titlesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +35,18 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus{
         selectChannels = (Button) findViewById(R.id.selectChannelButton);
         List<String> list = new ArrayList<>();
         listView = (ListView) findViewById(R.id.articlesTitlesListView);
+        listView.setVisibility(View.VISIBLE);
+        titlesList = new ArrayList<>();
 
         getUserPref();
-        if(userPref!=null){
+        if(false){
             logIt("Hiding Select Button channels Panel");
             hideSelectChannelsPanel();
             list.addAll(userPref);
-
-            GetArticlesJsonData getArticlesJsonData = new GetArticlesJsonData(list, this);
-            getArticlesJsonData.execute();
+            for (int i=0; i<list.size(); i++){
+                GetArticlesJsonData getArticlesJsonData = new GetArticlesJsonData(list.get(i), this);
+                getArticlesJsonData.execute();
+            }
         }else{
             listView.setVisibility(View.GONE);
         }
@@ -77,17 +78,27 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus{
     }
 
     private void getUserPref(){
-        SharedPreferences sharedPref = getSharedPreferences(AppConstants.USER_PREF_FILE, Context.MODE_PRIVATE);
-        userPref = sharedPref.getStringSet(AppConstants.USER_PREF, null);
+
     }
 
     @Override
     public void processedData(List<ArticlesDto> articlesDtoList) {
-        List<String> titlesList = new ArrayList<>();
+        logIt("processing Data");
         for(ArticlesDto articlesDto : articlesDtoList){
             titlesList.add(articlesDto.getTitle());
         }
         ArrayAdapter<String> myarrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titlesList);
         listView.setAdapter(myarrayAdapter);
+    }
+
+    protected void onPause(){
+        super.onPause();
+        selectChannels = null;
+        listView = null;
+        titlesList = null;
+    }
+
+    protected void onStop(){
+        super.onStop();
     }
 }

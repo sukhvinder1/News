@@ -1,7 +1,5 @@
 package com.learning.sukhu.news;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.learning.sukhu.news.DataBase.DatabaseHelper;
 import com.learning.sukhu.news.Dtos.SourcesDto;
 import com.learning.sukhu.news.Json.GetSourcesJsonData;
 import com.learning.sukhu.news.Transportation.SourcesDataBus;
@@ -30,6 +29,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
     private List<SourcesDto> sourcesList;
     private Set<String> userPref;
     private ListView listView;
+    int temp=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +68,8 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
                 if(!userPref.contains(sourcesList.get(position).getId())){
                     Log.v(Log_Tag, "Inside if");
                     Toast.makeText(view.getContext(), sourcesList.get(position).getName(), Toast.LENGTH_SHORT).show();
-                    userPref.add(sourcesList.get(position).getId());
-                    updateUserPreferences();
+                    updateUserPreferences(sourcesList.get(position).getId());
+
                 }else {
                     Toast.makeText(view.getContext(), "Pref already added to your list", Toast.LENGTH_SHORT).show();
                 }
@@ -77,17 +77,15 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         });
     }
 
-    private void updateUserPreferences(){
-        Log.v(Log_Tag, "Updating user preferences");
-        SharedPreferences sharedPref = getSharedPreferences(AppConstants.USER_PREF_FILE, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putStringSet(AppConstants.USER_PREF, userPref);
-        editor.commit();
+    private void updateUserPreferences(String id){
+        DatabaseHelper entry = new DatabaseHelper(this);
+        entry.open();
+        entry.saveEntry(id);
+        entry.close();
     }
 
     private void getUserPref(){
-        SharedPreferences sharedPref = getSharedPreferences(AppConstants.USER_PREF_FILE, Context.MODE_PRIVATE);
-        userPref = sharedPref.getStringSet(AppConstants.USER_PREF, null);
+
     }
 
     protected void onPause(){
