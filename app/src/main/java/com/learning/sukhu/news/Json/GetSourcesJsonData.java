@@ -24,15 +24,14 @@ public class GetSourcesJsonData extends GetRawJsonData{
     private Uri destinationUri;
     private SourcesDataBus sourcesDataBus;
 
-    public GetSourcesJsonData(String url, SourcesDataBus sourcesDataBus) {
+    public GetSourcesJsonData(SourcesDataBus sourcesDataBus) {
         super(null);
         sourcesList = new ArrayList<SourcesDto>();
         this.sourcesDataBus = sourcesDataBus;
-        createUri(url);
+        createUri();
     }
 
-    public void createUri(String url){
-        Log.v(LOG_TAG, url);
+    public void createUri(){
         final String BASE_URL = "https://newsapi.org/v1/sources/";
         destinationUri = Uri.parse(BASE_URL).buildUpon().build();
     }
