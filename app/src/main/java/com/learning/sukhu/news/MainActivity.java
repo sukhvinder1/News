@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.learning.sukhu.news.DataBase.DatabaseHandler;
+import com.learning.sukhu.news.DataBase.Source;
 import com.learning.sukhu.news.Dtos.ArticlesDto;
 import com.learning.sukhu.news.Json.GetArticlesJsonData;
 import com.learning.sukhu.news.Transportation.ArticleDataBus;
