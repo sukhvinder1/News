@@ -1,6 +1,7 @@
 package com.learning.sukhu.news;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -8,7 +9,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.learning.sukhu.news.DataBase.DatabaseHelper;
+import com.learning.sukhu.news.DataBase.DatabaseHandler;
+import com.learning.sukhu.news.DataBase.Source;
 import com.learning.sukhu.news.Dtos.SourcesDto;
 import com.learning.sukhu.news.Json.GetSourcesJsonData;
 import com.learning.sukhu.news.Transportation.SourcesDataBus;
@@ -27,9 +29,9 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
 
     private GetSourcesJsonData getSourcesJsonData;
     private List<SourcesDto> sourcesList;
-    private Set<String> userPref;
     private ListView listView;
-    int temp=0;
+    protected DatabaseHandler databaseHandler;
+    private SelectChannelsHelper helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +41,17 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
 
     public void onStart(){
         super.onStart();
-
+        databaseHandler = new DatabaseHandler(this);
         sourcesList = new ArrayList<>();
         listView = (ListView)findViewById(R.id.sourcesListView);
-        getUserPref();
-        if(userPref ==null || userPref.isEmpty()){
-            Log.v(Log_Tag, "Initializing user pref");
-            userPref = new HashSet<>();
-        }
-        getSourcesJsonData = new GetSourcesJsonData("Hello", this);
+        helper = new SelectChannelsHelper(databaseHandler);
+
+        getSourcesJsonData = new GetSourcesJsonData(this);
         getSourcesJsonData.execute();
     }
 
     @Override
-    public void processedData(List<SourcesDto> sources) {
-        Log.v("Sukh_tag/******", sources.get(0).getName());
-
+    public void processedData(final List<SourcesDto> sources) {
         //creating sourceList of Sources
         sourcesList.addAll(sources);
 
@@ -64,33 +61,13 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                if(!userPref.contains(sourcesList.get(position).getId())){
-                    Log.v(Log_Tag, "Inside if");
-                    Toast.makeText(view.getContext(), sourcesList.get(position).getName(), Toast.LENGTH_SHORT).show();
-                    updateUserPreferences(sourcesList.get(position).getId());
-
-                }else {
-                    Toast.makeText(view.getContext(), "Pref already added to your list", Toast.LENGTH_SHORT).show();
+                if(helper.checkIfPreferenceExists(sourcesList.get(position).getId())){
+                    Toast.makeText(view.getContext(), "Preference already added to your list", Toast.LENGTH_SHORT).show();
+                }else{
+                    helper.addPreference(sourcesList.get(position).getName(), sourcesList.get(position).getId());
+                    Toast.makeText(view.getContext(), sourcesList.get(position).getName()+" Added", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
-
-    private void updateUserPreferences(String id){
-        DatabaseHelper entry = new DatabaseHelper(this);
-        entry.open();
-        entry.saveEntry(id);
-        entry.close();
-    }
-
-    private void getUserPref(){
-
-    }
-
-    protected void onPause(){
-         super.onPause();
-    }
-
-
 }
