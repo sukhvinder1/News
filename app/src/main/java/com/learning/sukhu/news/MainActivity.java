@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.learning.sukhu.news.DataBase.DatabaseHandler;
-import com.learning.sukhu.news.DataBase.Source;
 import com.learning.sukhu.news.Dtos.ArticlesDto;
 import com.learning.sukhu.news.Json.GetArticlesJsonData;
 import com.learning.sukhu.news.Transportation.ArticleDataBus;
@@ -40,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus{
         listView.setVisibility(View.VISIBLE);
         titlesList = new ArrayList<>();
 
-        getUserPref();
         if(false){
             logIt("Hiding Select Button channels Panel");
             hideSelectChannelsPanel();
@@ -77,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus{
         if(selectChannelsPanel.getVisibility() == View.VISIBLE){
             selectChannelsPanel.setVisibility(View.GONE);
         }
-    }
-
-    private void getUserPref(){
-
     }
 
     @Override

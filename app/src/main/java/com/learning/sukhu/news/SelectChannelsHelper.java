@@ -23,4 +23,9 @@ public class SelectChannelsHelper {
         databaseHandler.addSource(source);
     }
 
+    public void deleteSource(String name, String sourceId){
+        Source source = new Source(name, sourceId);
+        databaseHandler.deleteSource(source);
+    }
+
 }

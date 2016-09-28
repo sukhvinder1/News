@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.BoolRes;
 import android.util.Log;
 
 /**
@@ -56,6 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
         db.insert(SOURCES_TABLE, null, values);
         db.close();
+        //getAllSources();
     }
 
     /**
@@ -67,6 +67,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         db.delete(SOURCES_TABLE, COLUMN_SOURCE_ID + " = ?",
                 new String[] { String.valueOf(source.getSourceId()) });
         db.close();
+        //getAllSources();
     }
 
     /**
