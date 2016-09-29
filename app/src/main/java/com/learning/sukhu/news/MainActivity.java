@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     List<String> titlesList;
     protected DatabaseHandler databaseHandler;
     private DataProvider provider;
+    private View selectChannelsPanel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
 
     protected void onStart(){
         super.onStart();
+        logIt("ON START");
         selectChannels = (Button) findViewById(R.id.selectChannelButton);
         List<String> list = new ArrayList<>();
         listView = (ListView) findViewById(R.id.articlesTitlesListView);
@@ -103,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
                 getArticlesJsonData.execute();
             }
         }else{
+            logIt("in Else");
+            showSelectChannelsPanel();
             listView.setVisibility(View.GONE);
         }
     }
@@ -125,10 +129,17 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
      * Hiding slect channel panel
      */
     private void hideSelectChannelsPanel(){
-        View selectChannelsPanel = findViewById(R.id.selectButtonFragment);
+        selectChannelsPanel = findViewById(R.id.selectButtonFragment);
 
         if(selectChannelsPanel.getVisibility() == View.VISIBLE){
             selectChannelsPanel.setVisibility(View.GONE);
+        }
+    }
+
+    private void showSelectChannelsPanel(){
+        selectChannelsPanel = findViewById(R.id.selectButtonFragment);
+        if(selectChannelsPanel.getVisibility() == View.GONE){
+            selectChannelsPanel.setVisibility(View.VISIBLE);
         }
     }
 

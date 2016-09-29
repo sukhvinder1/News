@@ -34,7 +34,9 @@ public class DataProvider {
     }
 
     public boolean isFirstTime(){
-        return databaseHandler.isFirstTime();
+        boolean result = databaseHandler.isFirstTime();
+        Log.v("Sukh", "Result : " + result);
+        return result;
     }
 
     public List<String> getUserPrefrence(){
