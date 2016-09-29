@@ -1,13 +1,11 @@
 package com.learning.sukhu.news;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.learning.sukhu.news.DataBase.DatabaseHandler;
 import com.learning.sukhu.news.Dtos.SourcesDto;
@@ -28,7 +26,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
     private List<SourcesDto> sourcesList;
     private ListView listView;
     protected DatabaseHandler databaseHandler;
-    private SelectChannelsHelper helper;
+    private DataProvider helper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +39,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         databaseHandler = new DatabaseHandler(this);
         sourcesList = new ArrayList<>();
         listView = (ListView)findViewById(R.id.sourcesListView);
-        helper = new SelectChannelsHelper(databaseHandler);
+        helper = new DataProvider(databaseHandler);
 
         getSourcesJsonData = new GetSourcesJsonData(this);
         getSourcesJsonData.execute();
@@ -88,8 +86,6 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
     public void showSnackBar(View v){
         Snackbar snackbar1 = Snackbar.make(v, "Item has been deleted!", Snackbar.LENGTH_SHORT);
         View sbView = snackbar1.getView();
-        TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
-        textView.setTextColor(Color.GREEN);
         snackbar1.show();
     }
 }
