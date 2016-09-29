@@ -42,7 +42,7 @@ public class DataProvider {
         List <Source> sourcesList = databaseHandler.getSourcesList();
         for(Source source : sourcesList){
             sourceList.add(source.getSourceId());
-            Log.v("Sukh", "Adding" + source.getName());
+            Log.v("Sukh", "Adding " + source.getName());
         }
         return sourceList;
     }
