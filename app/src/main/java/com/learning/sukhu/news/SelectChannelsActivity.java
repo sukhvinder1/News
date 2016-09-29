@@ -26,7 +26,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
     private List<SourcesDto> sourcesList;
     private ListView listView;
     protected DatabaseHandler databaseHandler;
-    private DataProvider helper;
+    private DataProvider provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         databaseHandler = new DatabaseHandler(this);
         sourcesList = new ArrayList<>();
         listView = (ListView)findViewById(R.id.sourcesListView);
-        helper = new DataProvider(databaseHandler);
+        provider = new DataProvider(databaseHandler);
 
         getSourcesJsonData = new GetSourcesJsonData(this);
         getSourcesJsonData.execute();
@@ -58,23 +58,23 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 final String sourceName = sourcesList.get(position).getName();
                 final String sourceId = sourcesList.get(position).getId();
-                if(helper.checkIfPreferenceExists(sourcesList.get(position).getId())){
+                if(provider.checkIfPreferenceExists(sourcesList.get(position).getId())){
                     Snackbar.make(view, "Its already added to your list", Snackbar.LENGTH_INDEFINITE)
                             .setAction("Delete ?", new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
-                                    helper.deleteSource(sourceName,sourceId);
+                                    provider.deleteSource(sourceName,sourceId);
                                     showSnackBar(v);
 
                                 }
                             }).show();
                 }else{
-                    helper.addPreference(sourcesList.get(position).getName(), sourcesList.get(position).getId());
+                    provider.addPreference(sourcesList.get(position).getName(), sourcesList.get(position).getId());
                     Snackbar.make(view, sourceName +" Added", Snackbar.LENGTH_LONG)
                             .setAction("Undo", new View.OnClickListener(){
                                 @Override
                                 public void onClick(View v) {
-                                    helper.deleteSource(sourceName,sourceId);
+                                    provider.deleteSource(sourceName,sourceId);
                                     showSnackBar(v);
                                 }
                             }).show();

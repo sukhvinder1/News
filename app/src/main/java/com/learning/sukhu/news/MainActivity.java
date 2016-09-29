@@ -11,10 +11,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.learning.sukhu.news.DataBase.DatabaseHandler;
 import com.learning.sukhu.news.Dtos.ArticlesDto;
 import com.learning.sukhu.news.Json.GetArticlesJsonData;
 import com.learning.sukhu.news.Transportation.ArticleDataBus;
@@ -27,11 +29,15 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     private String LOG_TAG = "Sukh_tag_MainActivity";
     private ListView listView;
     List<String> titlesList;
+    protected DatabaseHandler databaseHandler;
+    private DataProvider provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,11 +91,13 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         listView = (ListView) findViewById(R.id.articlesTitlesListView);
         listView.setVisibility(View.VISIBLE);
         titlesList = new ArrayList<>();
+        databaseHandler = new DatabaseHandler(this);
+        provider = new DataProvider(databaseHandler);
 
-        if(false){
+        if(!provider.isFirstTime()){
             logIt("Hiding Select Button channels Panel");
             hideSelectChannelsPanel();
-            //list.addAll();
+            list.addAll(provider.getUserPrefrence());
             for (int i=0; i<list.size(); i++){
                 GetArticlesJsonData getArticlesJsonData = new GetArticlesJsonData(list.get(i), this);
                 getArticlesJsonData.execute();

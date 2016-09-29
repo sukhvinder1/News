@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sinsukhv on 9/27/2016.
  */
@@ -19,6 +22,10 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     private static final String DATABASE_NAME = "sourcesDb";
     private static final String SOURCES_TABLE = "sourcesTable";
     private static final int DATABASE_VERSION = 1;
+
+    private int size = 0;
+    private Cursor genCursor;
+    private String LOG_TAG = "Sukh_tag_DatabaseHandler";
 
     private Context context;
 
@@ -73,18 +80,37 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     /**
      * Reading all Sources
      */
-    public void getAllSources(){
+    private void getAllSources(){
         // Select All Query
         String selectQuery = "SELECT  * FROM " + SOURCES_TABLE;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
+        genCursor = db.rawQuery(selectQuery, null);
+        size = genCursor.getCount();
+        /*if (cursor.moveToFirst()) {
             do {
                 Log.v("Sukh", "id = " + cursor.getString(0) + " name = " + cursor.getString(1) + " Sid = " + cursor.getString(2));
             } while (cursor.moveToNext());
+        }*/
+    }
+
+    public boolean isFirstTime(){
+        getAllSources();
+        Log.v(LOG_TAG, "Size of cursor : " + size);
+        if(size == 0){
+            return true;
         }
+        return false;
+    }
+
+    public List<Source> getSourcesList(){
+        List<Source> sourcesList = new ArrayList<Source>();
+        if (genCursor.moveToFirst()) {
+            do {
+                sourcesList.add(new Source(genCursor.getString(1), genCursor.getString(2)));
+            } while (genCursor.moveToNext());
+        }
+        return sourcesList;
     }
 
     /**
