@@ -104,6 +104,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
     }
 
     public List<Source> getSourcesList(){
+        getAllSources();
         List<Source> sourcesList = new ArrayList<Source>();
         if (genCursor.moveToFirst()) {
             do {

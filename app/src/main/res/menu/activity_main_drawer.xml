@@ -11,10 +11,6 @@
             android:icon="@drawable/ic_menu_manage"
             android:title="Update News Providers" />
 
-        <item
-            android:id="@+id/addSources"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Add News Providers" />
     </group>
 
     <item android:title="Communicate">

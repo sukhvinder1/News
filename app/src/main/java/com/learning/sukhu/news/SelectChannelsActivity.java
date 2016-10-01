@@ -24,6 +24,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
 
     private GetSourcesJsonData getSourcesJsonData;
     private List<SourcesDto> sourcesList;
+    List<String> userPref;
     private ListView listView;
     protected DatabaseHandler databaseHandler;
     private DataProvider provider;
@@ -32,15 +33,18 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_channels);
+        //getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public void onStart(){
         super.onStart();
         databaseHandler = new DatabaseHandler(this);
         sourcesList = new ArrayList<>();
+        userPref = new ArrayList<String>();
         listView = (ListView)findViewById(R.id.sourcesListView);
         provider = new DataProvider(databaseHandler);
 
+        userPref = provider.getUserPrefrence();
         getSourcesJsonData = new GetSourcesJsonData(this);
         getSourcesJsonData.execute();
     }
@@ -50,7 +54,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         //creating sourceList of Sources
         sourcesList.addAll(sources);
 
-        CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.channels_custom_list, sourcesList);
+        final CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.channels_custom_list, sourcesList, userPref);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -59,26 +63,13 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
                 final String sourceName = sourcesList.get(position).getName();
                 final String sourceId = sourcesList.get(position).getId();
                 if(provider.checkIfPreferenceExists(sourcesList.get(position).getId())){
-                    Snackbar.make(view, "Its already added to your list", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Delete ?", new View.OnClickListener(){
-                                @Override
-                                public void onClick(View v) {
-                                    provider.deleteSource(sourceName,sourceId);
-                                    showSnackBar(v);
-
-                                }
-                            }).show();
+                    provider.deleteSource(sourceName, sourceId);
+                    Snackbar.make(view, sourceName + " removed from your list", Snackbar.LENGTH_SHORT).show();
                 }else{
                     provider.addPreference(sourcesList.get(position).getName(), sourcesList.get(position).getId());
-                    Snackbar.make(view, sourceName +" Added", Snackbar.LENGTH_LONG)
-                            .setAction("Undo", new View.OnClickListener(){
-                                @Override
-                                public void onClick(View v) {
-                                    provider.deleteSource(sourceName,sourceId);
-                                    showSnackBar(v);
-                                }
-                            }).show();
+                    Snackbar.make(view, sourceName +" Added", Snackbar.LENGTH_SHORT).show();
                 }
+                adapter.setCheckBox(position, provider.getUserPrefrence());
             }
         });
     }

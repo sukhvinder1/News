@@ -74,10 +74,6 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         } else if (id == R.id.updateSources) {
             Intent selectChannelsIntent = new Intent(this, SelectChannelsActivity.class);
             startActivity(selectChannelsIntent);
-        } else if(id == R.id.addSources){
-            Intent selectChannelsIntent = new Intent(this, SelectChannelsActivity.class);
-            startActivity(selectChannelsIntent);
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
