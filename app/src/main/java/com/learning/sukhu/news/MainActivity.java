@@ -29,10 +29,11 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     private Button selectChannels;
     private String LOG_TAG = "Sukh_tag_MainActivity";
     private ListView listView;
-    List<String> titlesList;
+    List<ArticlesDto> articlesList;
     protected DatabaseHandler databaseHandler;
     private DataProvider provider;
     private View selectChannelsPanel;
+    private NewsListAdaptor adaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +90,10 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         List<String> list = new ArrayList<>();
         listView = (ListView) findViewById(R.id.articlesTitlesListView);
         listView.setVisibility(View.VISIBLE);
-        titlesList = new ArrayList<>();
+        articlesList = new ArrayList<ArticlesDto>();
         databaseHandler = new DatabaseHandler(this);
         provider = new DataProvider(databaseHandler);
+        adaptor = new NewsListAdaptor(this, articlesList);
 
         if(!provider.isFirstTime()){
             logIt("Hiding Select Button channels Panel");
@@ -144,10 +146,9 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     public void processedData(List<ArticlesDto> articlesDtoList) {
         logIt("processing Data");
         for(ArticlesDto articlesDto : articlesDtoList){
-            titlesList.add(articlesDto.getHeading());
+            articlesList.add(articlesDto);
         }
-        NewsListAdaptor adaptor = new NewsListAdaptor(this, articlesDtoList);
-        //ArrayAdapter<String> myarrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titlesList);
+        adaptor.notifyDataChanged(articlesList);
         listView.setAdapter(adaptor);
     }
 
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         super.onPause();
         selectChannels = null;
         listView = null;
-        titlesList = null;
+        articlesList = null;
     }
 
     protected void onStop(){

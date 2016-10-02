@@ -1,48 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:weightSum="4"
-    android:orientation="horizontal">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="News Headline"
-            android:textSize="14dp"
-            android:textColor="#000"
-            android:id="@+id/headline" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="16dp"
-            android:textSize="12dp"
-            android:text="Description"
-            android:textColor="#C7BFBD"
-            android:id="@+id/headingDescription"
-            android:layout_below="@+id/headline"
-            android:layout_alignParentStart="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="10dp"
-            android:text="Time"
-            android:id="@+id/headlineTime"
-            android:layout_below="@+id/headingDescription" />
-    </RelativeLayout>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativelayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#22000000">
 
     <ImageView
-        android:id="@+id/headlineImage"
-        android:layout_weight="3"
-        android:layout_gravity="center"
+        android:id="@+id/myImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/myImageViewText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#88000000"
+        android:layout_alignLeft="@id/myImageView"
+        android:layout_alignTop="@id/myImageView"
+        android:layout_alignRight="@id/myImageView"
+        android:layout_alignBottom="@id/myImageView"
+        android:layout_marginTop="150dp"
+        android:gravity="left"
+        android:text="Hello"
+        android:textColor="#FFF" />
+
+</RelativeLayout>

@@ -42,6 +42,11 @@ public class NewsListAdaptor extends BaseAdapter {
         return 0;
     }
 
+    public void notifyDataChanged(List<ArticlesDto> articlesList){
+        this.articlesList = articlesList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView ==null){
@@ -50,16 +55,16 @@ public class NewsListAdaptor extends BaseAdapter {
 
         ArticlesDto article = getItem(position);
 
-        TextView headline = (TextView)convertView.findViewById(R.id.headline);
+        TextView headline = (TextView)convertView.findViewById(R.id.myImageViewText);
         headline.setText(article.getHeading());
 
-        TextView description = (TextView)convertView.findViewById(R.id.headingDescription);
+        /*TextView description = (TextView)convertView.findViewById(R.id.headingDescription);
         description.setText(article.getDescription());
 
         TextView time = (TextView)convertView.findViewById(R.id.headlineTime);
-        time.setText(article.getTime());
+        time.setText(article.getTime());*/
 
-        ImageView imageView = (ImageView) convertView.findViewById(R.id.headlineImage);
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.myImageView);
         Picasso.with(context).load(article.getArticleImageUrl()).into(imageView);
 
         return convertView;
