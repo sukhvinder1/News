@@ -11,6 +11,8 @@ import com.learning.sukhu.news.DataBase.DatabaseHandler;
 import com.learning.sukhu.news.Dtos.SourcesDto;
 import com.learning.sukhu.news.Json.GetSourcesJsonData;
 import com.learning.sukhu.news.Transportation.SourcesDataBus;
+import com.learning.sukhu.news.adapters.CustomListAdapter;
+import com.learning.sukhu.news.provider.DataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +56,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         //creating sourceList of Sources
         sourcesList.addAll(sources);
 
-        final CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), R.layout.channels_custom_list, sourcesList, userPref);
+        final CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), sourcesList, userPref);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

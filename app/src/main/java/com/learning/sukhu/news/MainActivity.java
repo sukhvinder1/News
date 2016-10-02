@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -20,6 +19,8 @@ import com.learning.sukhu.news.DataBase.DatabaseHandler;
 import com.learning.sukhu.news.Dtos.ArticlesDto;
 import com.learning.sukhu.news.Json.GetArticlesJsonData;
 import com.learning.sukhu.news.Transportation.ArticleDataBus;
+import com.learning.sukhu.news.adapters.NewsListAdaptor;
+import com.learning.sukhu.news.provider.DataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,10 +144,11 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     public void processedData(List<ArticlesDto> articlesDtoList) {
         logIt("processing Data");
         for(ArticlesDto articlesDto : articlesDtoList){
-            titlesList.add(articlesDto.getTitle());
+            titlesList.add(articlesDto.getHeading());
         }
-        ArrayAdapter<String> myarrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titlesList);
-        listView.setAdapter(myarrayAdapter);
+        NewsListAdaptor adaptor = new NewsListAdaptor(this, articlesDtoList);
+        //ArrayAdapter<String> myarrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, titlesList);
+        listView.setAdapter(adaptor);
     }
 
     protected void onPause(){

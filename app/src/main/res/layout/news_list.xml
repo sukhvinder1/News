@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="70dp"
     android:weightSum="4"
     android:orientation="horizontal">
 
@@ -14,14 +14,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="News Headline"
-            android:textSize="12dp"
+            android:textSize="14dp"
             android:textColor="#000"
             android:id="@+id/headline" />
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="10dp"
+            android:layout_height="16dp"
+            android:textSize="12dp"
             android:text="Description"
             android:textColor="#C7BFBD"
             android:id="@+id/headingDescription"
@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="8dp"
+            android:textSize="10dp"
             android:text="Time"
             android:id="@+id/headlineTime"
             android:layout_below="@+id/headingDescription" />
@@ -40,6 +40,7 @@
     <ImageView
         android:id="@+id/headlineImage"
         android:layout_weight="3"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher" />

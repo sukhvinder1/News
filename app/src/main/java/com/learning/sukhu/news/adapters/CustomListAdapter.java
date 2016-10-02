@@ -1,57 +1,67 @@
-package com.learning.sukhu.news;
+package com.learning.sukhu.news.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.learning.sukhu.news.Dtos.SourcesDto;
+import com.learning.sukhu.news.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by quocnguyen on 03/08/2016.
  */
-public class CustomListAdapter extends ArrayAdapter<SourcesDto> {
+public class CustomListAdapter extends BaseAdapter {
 
-    List<SourcesDto> sources;
-    Context context;
-    int resource;
-    List<String> userPref;
+    private final List<SourcesDto> sources;
+    private final Context context;
+    private List<String> userPref;
 
+    @Override
+    public int getCount() {
+        return sources.size();
+    }
 
-    public CustomListAdapter(Context context, int resource, List<SourcesDto> sources, List<String> userPref) {
-        super(context, resource, sources);
+    @Override
+    public SourcesDto getItem(int position) {
+        return sources.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public CustomListAdapter(Context context, List<SourcesDto> sources, List<String> userPref) {
         this.sources = sources;
         this.context = context;
-        this.resource = resource;
         this.userPref = userPref;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater layoutInflater = (LayoutInflater) getContext()
-                .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        convertView = layoutInflater.inflate(R.layout.channels_custom_list, null, true);
+        if(convertView == null){
+            convertView = LayoutInflater.from(context).inflate(R.layout.channels_custom_list, parent, false);
+        }
 
-        SourcesDto sources = getItem(position);
+        SourcesDto source = getItem(position);
 
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageView);
-        Picasso.with(context).load(sources.getUrlSize()).into(imageView);
+        Picasso.with(context).load(source.getUrlSize()).into(imageView);
 
         TextView txtName = (TextView) convertView.findViewById(R.id.sourcesList);
-        txtName.setText(sources.getName());
+        txtName.setText(source.getName());
 
         CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.checkBox);
 
-        if(userPref.contains(sources.getId())){
+        if(userPref.contains(source.getId())){
             checkBox.setChecked(true);
         }else{
             checkBox.setChecked(false);

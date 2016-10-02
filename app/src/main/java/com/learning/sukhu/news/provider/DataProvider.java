@@ -1,4 +1,4 @@
-package com.learning.sukhu.news;
+package com.learning.sukhu.news.provider;
 
 import android.util.Log;
 

@@ -55,6 +55,9 @@ public class GetArticlesJsonData extends GetRawJsonData{
     public List<ArticlesDto> processData(){
         final String ARTICLES_Obj="articles";
         final String TITLE_Obj="title";
+        final String DESCRIPTION_Ojb = "description";
+        final String TIME_Obj = "publishedAt";
+        final String ARTICLE_IMAGE_URL_Obj = "urlToImage";
         final String URL_Obj="url";
 
         try{
@@ -64,8 +67,11 @@ public class GetArticlesJsonData extends GetRawJsonData{
                 JSONObject article = jsonArray.getJSONObject(i);
                 String title = article.getString(TITLE_Obj);
                 String url = article.getString(URL_Obj);
+                String description = article.getString(DESCRIPTION_Ojb);
+                String article_Image_url = article.getString(ARTICLE_IMAGE_URL_Obj);
+                String time = article.getString(TIME_Obj);
 
-                ArticlesDto dto = new ArticlesDto(title, url);
+                ArticlesDto dto = new ArticlesDto(title, article_Image_url, description, time, url);
                 this.articlesDto.add(dto);
             }
         }catch (JSONException e){
