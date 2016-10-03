@@ -1,9 +1,14 @@
 package com.learning.sukhu.news;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -36,6 +41,8 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_channels);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     public void onStart(){
@@ -45,10 +52,8 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         userPref = new ArrayList<String>();
         listView = (ListView)findViewById(R.id.sourcesListView);
         provider = new DataProvider(databaseHandler);
-
         userPref = provider.getUserPrefrence();
-        getSourcesJsonData = new GetSourcesJsonData(this);
-        getSourcesJsonData.execute();
+        networkLoop();
     }
 
     @Override
@@ -76,9 +81,31 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         });
     }
 
-    public void showSnackBar(View v){
-        Snackbar snackbar1 = Snackbar.make(v, "Item has been deleted!", Snackbar.LENGTH_SHORT);
-        View sbView = snackbar1.getView();
-        snackbar1.show();
+    private void networkLoop(){
+        if(isNetworkAvailable()){
+            Log.v(Log_Tag, "Network available");
+            getSources();
+        }else{
+            Log.v(Log_Tag, "No network available");
+            Snackbar.make(findViewById(android.R.id.content), "No Network Available", Snackbar.LENGTH_LONG)
+                .setAction("Retry ?", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        networkLoop();
+                    }
+                }).show();
+        }
+    }
+
+    private void getSources(){
+        getSourcesJsonData = new GetSourcesJsonData(this);
+        getSourcesJsonData.execute();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

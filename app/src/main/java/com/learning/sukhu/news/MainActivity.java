@@ -1,8 +1,12 @@
 package com.learning.sukhu.news;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +16,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -34,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     private DataProvider provider;
     private View selectChannelsPanel;
     private NewsListAdaptor adaptor;
+    List<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
 
         if (id == R.id.settings) {
             Log.v("sukh", "setting button ");
+            Intent intent = new Intent(this, NewsViewActivity.class);
+            startActivity(intent);
         } else if (id == R.id.updateSources) {
             Intent selectChannelsIntent = new Intent(this, SelectChannelsActivity.class);
             startActivity(selectChannelsIntent);
@@ -87,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         super.onStart();
         logIt("ON START");
         selectChannels = (Button) findViewById(R.id.selectChannelButton);
-        List<String> list = new ArrayList<>();
+        list = new ArrayList<>();
         listView = (ListView) findViewById(R.id.articlesTitlesListView);
         listView.setVisibility(View.VISIBLE);
         articlesList = new ArrayList<ArticlesDto>();
@@ -99,10 +107,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
             logIt("Hiding Select Button channels Panel");
             hideSelectChannelsPanel();
             list.addAll(provider.getUserPrefrence());
-            for (int i=0; i<list.size(); i++){
-                GetArticlesJsonData getArticlesJsonData = new GetArticlesJsonData(list.get(i), this);
-                getArticlesJsonData.execute();
-            }
+            networkLoop();
         }else{
             logIt("in Else");
             showSelectChannelsPanel();
@@ -150,6 +155,16 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         }
         adaptor.notifyDataChanged(articlesList);
         listView.setAdapter(adaptor);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
+                String url = articlesList.get(position).getUrl();
+                Intent intent = new Intent(view.getContext(), NewsViewActivity.class);
+                intent.putExtra("url", url);
+                startActivity(intent);
+            }
+        });
     }
 
     protected void onPause(){
@@ -161,5 +176,34 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
 
     protected void onStop(){
         super.onStop();
+    }
+
+    private void networkLoop(){
+        if(isNetworkAvailable()){
+            getArticles(list);
+        }else{
+            Log.v(LOG_TAG, "No network available");
+            Snackbar.make(findViewById(android.R.id.content), "No Network Available", Snackbar.LENGTH_INDEFINITE)
+                .setAction("Retry ?", new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        networkLoop();
+                    }
+                }).show();
+        }
+    }
+
+    private void getArticles(List<String> list){
+        for (int i=0; i<list.size(); i++) {
+            GetArticlesJsonData getArticlesJsonData = new GetArticlesJsonData(list.get(i), this);
+            getArticlesJsonData.execute();
+        }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
