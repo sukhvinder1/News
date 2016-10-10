@@ -8,7 +8,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -16,7 +15,7 @@ import com.learning.sukhu.news.DataBase.DatabaseHandler;
 import com.learning.sukhu.news.Dtos.SourcesDto;
 import com.learning.sukhu.news.Json.GetSourcesJsonData;
 import com.learning.sukhu.news.Transportation.SourcesDataBus;
-import com.learning.sukhu.news.adapters.CustomListAdapter;
+import com.learning.sukhu.news.adapters.SourceListAdapter;
 import com.learning.sukhu.news.provider.DataProvider;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         setContentView(R.layout.select_channels);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     public void onStart(){
@@ -61,7 +60,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
         //creating sourceList of Sources
         sourcesList.addAll(sources);
 
-        final CustomListAdapter adapter = new CustomListAdapter(getApplicationContext(), sourcesList, userPref);
+        final SourceListAdapter adapter = new SourceListAdapter(getApplicationContext(), sourcesList, userPref);
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

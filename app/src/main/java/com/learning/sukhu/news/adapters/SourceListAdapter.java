@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Created by quocnguyen on 03/08/2016.
  */
-public class CustomListAdapter extends BaseAdapter {
+public class SourceListAdapter extends BaseAdapter {
 
     private final List<SourcesDto> sources;
     private final Context context;
@@ -39,7 +39,7 @@ public class CustomListAdapter extends BaseAdapter {
         return position;
     }
 
-    public CustomListAdapter(Context context, List<SourcesDto> sources, List<String> userPref) {
+    public SourceListAdapter(Context context, List<SourcesDto> sources, List<String> userPref) {
         this.sources = sources;
         this.context = context;
         this.userPref = userPref;

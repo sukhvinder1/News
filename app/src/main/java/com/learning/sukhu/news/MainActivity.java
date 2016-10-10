@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
@@ -39,26 +39,15 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     private DataProvider provider;
     private View selectChannelsPanel;
     private NewsListAdaptor adaptor;
+    private Parcelable state;
     List<String> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        setNavigationDrawer();
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     @Override
@@ -78,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         int id = item.getItemId();
 
         if (id == R.id.settings) {
-            Log.v("sukh", "setting button ");
+            logIt("Setting Button");
             Intent intent = new Intent(this, NewsViewActivity.class);
             startActivity(intent);
         } else if (id == R.id.updateSources) {
@@ -94,14 +83,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     protected void onStart(){
         super.onStart();
         logIt("ON START");
-        selectChannels = (Button) findViewById(R.id.selectChannelButton);
-        list = new ArrayList<>();
-        listView = (ListView) findViewById(R.id.articlesTitlesListView);
-        listView.setVisibility(View.VISIBLE);
-        articlesList = new ArrayList<ArticlesDto>();
-        databaseHandler = new DatabaseHandler(this);
-        provider = new DataProvider(databaseHandler);
-        adaptor = new NewsListAdaptor(this, articlesList);
+        initializingVariable();
 
         if(!provider.isFirstTime()){
             logIt("Hiding Select Button channels Panel");
@@ -129,24 +111,6 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         Log.v(LOG_TAG, logText);
     }
 
-    /**
-     * Hiding slect channel panel
-     */
-    private void hideSelectChannelsPanel(){
-        selectChannelsPanel = findViewById(R.id.selectButtonFragment);
-
-        if(selectChannelsPanel.getVisibility() == View.VISIBLE){
-            selectChannelsPanel.setVisibility(View.GONE);
-        }
-    }
-
-    private void showSelectChannelsPanel(){
-        selectChannelsPanel = findViewById(R.id.selectButtonFragment);
-        if(selectChannelsPanel.getVisibility() == View.GONE){
-            selectChannelsPanel.setVisibility(View.VISIBLE);
-        }
-    }
-
     @Override
     public void processedData(List<ArticlesDto> articlesDtoList) {
         logIt("processing Data");
@@ -167,11 +131,20 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         });
     }
 
+    protected void onResume(){
+        super.onResume();
+        if (state != null) {
+            listView.requestFocus();
+            listView.onRestoreInstanceState(state);
+        }
+    }
+
     protected void onPause(){
-        super.onPause();
+        state = listView.onSaveInstanceState();
         selectChannels = null;
         listView = null;
         articlesList = null;
+        super.onPause();
     }
 
     protected void onStop(){
@@ -205,5 +178,47 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void setNavigationDrawer(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void initializingVariable(){
+        selectChannels = (Button) findViewById(R.id.selectChannelButton);
+        list = new ArrayList<>();
+        listView = (ListView) findViewById(R.id.articlesTitlesListView);
+        listView.setVisibility(View.VISIBLE);
+        articlesList = new ArrayList<ArticlesDto>();
+        databaseHandler = new DatabaseHandler(this);
+        provider = new DataProvider(databaseHandler);
+        adaptor = new NewsListAdaptor(this, articlesList);
+    }
+
+    /**
+     * Hiding slect channel panel
+     */
+    private void hideSelectChannelsPanel(){
+        selectChannelsPanel = findViewById(R.id.selectButtonFragment);
+        if(selectChannelsPanel.getVisibility() == View.VISIBLE){
+            selectChannelsPanel.setVisibility(View.GONE);
+        }
+    }
+
+    private void showSelectChannelsPanel(){
+        selectChannelsPanel = findViewById(R.id.selectButtonFragment);
+        if(selectChannelsPanel.getVisibility() == View.GONE){
+            selectChannelsPanel.setVisibility(View.VISIBLE);
+        }
     }
 }

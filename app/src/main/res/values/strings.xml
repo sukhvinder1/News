@@ -5,5 +5,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
-    <string name="selectSourcesButtonText">Take me to the Channels List</string>
+    <string name="selectSourcesButtonText">Take me to the Channels List.</string>
+    <string name="selectChannelsHeading">No Channels Available, please select from channel list......</string>
 </resources>

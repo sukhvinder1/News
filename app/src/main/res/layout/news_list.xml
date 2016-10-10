@@ -18,6 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#88000000"
+        android:fontFamily="sans-serif-medium"
         android:layout_alignLeft="@id/myImageView"
         android:layout_alignTop="@id/myImageView"
         android:layout_alignRight="@id/myImageView"

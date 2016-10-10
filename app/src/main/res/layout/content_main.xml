@@ -10,7 +10,7 @@
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/selectButtonFragment"
         android:layout_alignParentTop="true"
         class="com.learning.sukhu.news.Fragments.SelectButtonFragment"/>
@@ -22,13 +22,12 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/articlesTitlesListView"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_weight="3.5"
             android:layout_alignParentEnd="true" />
-
     </LinearLayout>
 
 

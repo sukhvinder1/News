@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:orientation="vertical"
-    android:background="#071f97">
+    android:background="@color/colorPrimary">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="News for you!"
+        android:text="News for you !"
         android:textSize="24sp"
         android:textColor="#FFF"
         android:textStyle="bold"
