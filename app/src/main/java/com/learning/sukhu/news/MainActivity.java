@@ -12,6 +12,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -24,7 +27,9 @@ import com.learning.sukhu.news.DataBase.DatabaseHandler;
 import com.learning.sukhu.news.Dtos.ArticlesDto;
 import com.learning.sukhu.news.Json.GetArticlesJsonData;
 import com.learning.sukhu.news.Transportation.ArticleDataBus;
+import com.learning.sukhu.news.adapters.NewsAdaptor;
 import com.learning.sukhu.news.adapters.NewsListAdaptor;
+import com.learning.sukhu.news.adapters.RecyclerItemClickListener;
 import com.learning.sukhu.news.provider.DataProvider;
 
 import java.util.ArrayList;
@@ -33,14 +38,17 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements ArticleDataBus, NavigationView.OnNavigationItemSelectedListener{
     private Button selectChannels;
     private String LOG_TAG = "Sukh_tag_MainActivity";
-    private ListView listView;
+    //private ListView listView;
     List<ArticlesDto> articlesList;
     protected DatabaseHandler databaseHandler;
     private DataProvider provider;
     private View selectChannelsPanel;
-    private NewsListAdaptor adaptor;
+    //private NewsListAdaptor adaptor;
     private Parcelable state;
     List<String> list;
+
+    private RecyclerView recyclerView;
+    private NewsAdaptor adaptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
         }else{
             logIt("in Else");
             showSelectChannelsPanel();
-            listView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -118,9 +126,24 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
             articlesList.add(articlesDto);
         }
         adaptor.notifyDataChanged(articlesList);
-        listView.setAdapter(adaptor);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adaptor);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String url = articlesList.get(position).getUrl();
+                        Intent intent = new Intent(view.getContext(), NewsViewActivity.class);
+                        intent.putExtra("url", url);
+                        startActivity(intent);
+                    }
+                })
+        );
+
+       /* recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
                 String url = articlesList.get(position).getUrl();
@@ -128,21 +151,21 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
                 intent.putExtra("url", url);
                 startActivity(intent);
             }
-        });
+        });*/
     }
 
     protected void onResume(){
         super.onResume();
         if (state != null) {
-            listView.requestFocus();
-            listView.onRestoreInstanceState(state);
+            //listView.requestFocus();
+            //listView.onRestoreInstanceState(state);
         }
     }
 
     protected void onPause(){
-        state = listView.onSaveInstanceState();
+      //  state = listView.onSaveInstanceState();
         selectChannels = null;
-        listView = null;
+        recyclerView = null;
         articlesList = null;
         super.onPause();
     }
@@ -197,12 +220,12 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     private void initializingVariable(){
         selectChannels = (Button) findViewById(R.id.selectChannelButton);
         list = new ArrayList<>();
-        listView = (ListView) findViewById(R.id.articlesTitlesListView);
-        listView.setVisibility(View.VISIBLE);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView.setVisibility(View.VISIBLE);
         articlesList = new ArrayList<ArticlesDto>();
         databaseHandler = new DatabaseHandler(this);
         provider = new DataProvider(databaseHandler);
-        adaptor = new NewsListAdaptor(this, articlesList);
+        adaptor = new NewsAdaptor(articlesList);
     }
 
     /**
