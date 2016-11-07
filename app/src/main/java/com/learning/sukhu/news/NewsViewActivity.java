@@ -1,9 +1,11 @@
 package com.learning.sukhu.news;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -39,6 +41,18 @@ public class NewsViewActivity extends AppCompatActivity {
         webView.loadUrl(url);
     }
 
+    @Override
+    public void onBackPressed() {
+        Log.v("Sukh", "Back Button");
+        if(webView.canGoBack()){
+            webView.goBack();
+            return;
+        }else {
+            Intent main = new Intent(this, MainActivity.class);
+            startActivity(main);
+        }
+    }
+
     protected void onPause(){
         super.onPause();
         webView = null;
@@ -55,13 +69,11 @@ public class NewsViewActivity extends AppCompatActivity {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             view.loadUrl(url);
             return true;
-
         }
 
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
         }
-
     }
 }
