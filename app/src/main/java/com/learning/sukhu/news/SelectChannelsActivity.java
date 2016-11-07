@@ -98,7 +98,7 @@ public class SelectChannelsActivity extends AppCompatActivity implements Sources
 
     private void getSources(){
         getSourcesJsonData = new GetSourcesJsonData(this);
-        getSourcesJsonData.execute();
+        getSourcesJsonData.execute(this);
     }
 
     private boolean isNetworkAvailable() {
