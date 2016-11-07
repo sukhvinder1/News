@@ -123,7 +123,9 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     public void processedData(List<ArticlesDto> articlesDtoList) {
         logIt("processing Data");
         for(ArticlesDto articlesDto : articlesDtoList){
-            articlesList.add(articlesDto);
+            if(articlesDto!=null && articlesList != null){
+                articlesList.add(articlesDto);
+            }
         }
         adaptor.notifyDataChanged(articlesList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -142,16 +144,6 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
                     }
                 })
         );
-
-       /* recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-                String url = articlesList.get(position).getUrl();
-                Intent intent = new Intent(view.getContext(), NewsViewActivity.class);
-                intent.putExtra("url", url);
-                startActivity(intent);
-            }
-        });*/
     }
 
     protected void onResume(){
@@ -192,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
     private void getArticles(List<String> list){
         for (int i=0; i<list.size(); i++) {
             GetArticlesJsonData getArticlesJsonData = new GetArticlesJsonData(list.get(i), this);
-            getArticlesJsonData.execute();
+            getArticlesJsonData.execute(this);
         }
     }
 
