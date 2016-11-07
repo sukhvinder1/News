@@ -1,6 +1,7 @@
 package com.learning.sukhu.news.Json;
 
 import android.net.Uri;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.learning.sukhu.news.Dtos.ArticlesDto;
@@ -46,9 +47,9 @@ public class GetArticlesJsonData extends GetRawJsonData{
         return destinationUri != null;
     }
 
-    public void execute(){
+    public void execute(AppCompatActivity activity){
         super.setRawUrl(destinationUri.toString());
-        DownloadJsonData downloadJsonData = new DownloadJsonData();
+        DownloadJsonData downloadJsonData = new DownloadJsonData(activity);
         downloadJsonData.execute(destinationUri.toString());
     }
 
@@ -83,6 +84,11 @@ public class GetArticlesJsonData extends GetRawJsonData{
     }
 
     public class DownloadJsonData extends DownloadRawData{
+
+        public DownloadJsonData(AppCompatActivity activity) {
+            super(activity);
+        }
+
         @Override
         protected void onPostExecute(String webData) {
             super.onPostExecute(webData);
