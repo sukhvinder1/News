@@ -21,7 +21,6 @@ public class NewsViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_view);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     protected void onStart(){
