@@ -1,6 +1,9 @@
 package com.learning.sukhu.news.Json;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -47,18 +50,36 @@ public class GetRawJsonData {
         Log.v(LOG_TAG, logText);
     }
 
-    public void execute(){
+    public void execute(AppCompatActivity activity){
         logIt("Inside execute of GetRawData");
-        DownloadRawData downloadRawData = new DownloadRawData();
+        DownloadRawData downloadRawData = new DownloadRawData(activity);
         downloadRawData.execute(rawUrl);
     }
 
 
     public class DownloadRawData extends AsyncTask<String, Void, String>{
+        private ProgressDialog dialog;
+        private AppCompatActivity activity;
+        private Context context;
+
+        public DownloadRawData(AppCompatActivity activity) {
+            this.activity = activity;
+            context = activity;
+            dialog = new ProgressDialog(context);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Progressing...");
+            this.dialog.show();
+        }
 
         protected void onPostExecute(String webData) {
             Log.v(LOG_TAG, "Inside On Post Execute of DownloadRawData");
             data = webData;
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
             Log.v(LOG_TAG, "Data returned was : " + data);
         }
 
