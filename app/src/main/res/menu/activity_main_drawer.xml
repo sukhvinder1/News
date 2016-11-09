@@ -16,7 +16,7 @@
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_send"
+                android:id="@+id/communicate"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Contact Me" />
         </menu>

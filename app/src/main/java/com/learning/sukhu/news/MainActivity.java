@@ -19,16 +19,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.Toast;
 
 import com.learning.sukhu.news.DataBase.DatabaseHandler;
 import com.learning.sukhu.news.Dtos.ArticlesDto;
 import com.learning.sukhu.news.Json.GetArticlesJsonData;
 import com.learning.sukhu.news.Transportation.ArticleDataBus;
 import com.learning.sukhu.news.adapters.NewsAdaptor;
-import com.learning.sukhu.news.adapters.NewsListAdaptor;
 import com.learning.sukhu.news.adapters.RecyclerItemClickListener;
 import com.learning.sukhu.news.provider.DataProvider;
 
@@ -38,12 +36,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements ArticleDataBus, NavigationView.OnNavigationItemSelectedListener{
     private Button selectChannels;
     private String LOG_TAG = "Sukh_tag_MainActivity";
-    //private ListView listView;
     List<ArticlesDto> articlesList;
     protected DatabaseHandler databaseHandler;
     private DataProvider provider;
     private View selectChannelsPanel;
-    //private NewsListAdaptor adaptor;
     private Parcelable state;
     List<String> list;
 
@@ -76,11 +72,12 @@ public class MainActivity extends AppCompatActivity implements ArticleDataBus, N
 
         if (id == R.id.settings) {
             logIt("Setting Button");
-            Intent intent = new Intent(this, NewsViewActivity.class);
-            startActivity(intent);
+            Toast.makeText(this, "Settings coming soon", Toast.LENGTH_LONG).show();
         } else if (id == R.id.updateSources) {
             Intent selectChannelsIntent = new Intent(this, SelectChannelsActivity.class);
             startActivity(selectChannelsIntent);
+        } else if (id == R.id.communicate) {
+            Toast.makeText(this, "Communication coming soon", Toast.LENGTH_LONG).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

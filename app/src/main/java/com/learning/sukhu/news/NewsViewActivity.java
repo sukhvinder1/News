@@ -1,5 +1,7 @@
 package com.learning.sukhu.news;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -36,7 +38,7 @@ public class NewsViewActivity extends AppCompatActivity {
         webSettings.setSaveFormData(false);
         webSettings.setJavaScriptEnabled(true);
         webSettings.setSupportZoom(false);
-        webView.setWebViewClient(new myWebClient() );
+        webView.setWebViewClient(new myWebClient(this) );
         webView.loadUrl(url);
     }
 
@@ -59,8 +61,20 @@ public class NewsViewActivity extends AppCompatActivity {
 
     public class myWebClient extends WebViewClient
     {
+        private ProgressDialog dialog;
+        private AppCompatActivity activity;
+        private Context context;
+
+        public myWebClient(AppCompatActivity activity) {
+            this.activity = activity;
+            context = activity;
+            dialog = new ProgressDialog(context);
+        }
+
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            this.dialog.setMessage("Processing...");
+            this.dialog.show();
             super.onPageStarted(view, url, favicon);
         }
 
@@ -72,6 +86,9 @@ public class NewsViewActivity extends AppCompatActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            if(dialog.isShowing()){
+                dialog.dismiss();
+            }
             super.onPageFinished(view, url);
         }
     }
